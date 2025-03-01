@@ -32,7 +32,6 @@ const Autocomplete = (props: AutocompleteProps) => {
                             style={{
                                 backgroundColor: i===0 ? 'yellow' : 'white',
                                 color: i===0 ? 'red' : 'black',
-                                font: i===0 ? 'red' : 'black'
                             }}
                             >
                                 {c.code}
