@@ -26,8 +26,6 @@ const EquationRow = (props: EquationRowProps) => {
         const input = e.target;
         // Get the 'tail' (i.e. string from last whitespace to current
         // cursor location in the input) to use as seed for finding completions.
-        console.log('new tail')
-        console.log(tailStr)
         updateAutocompletePosition(input)
         updateCompletions(e.target.value)
         setTailStr(tailStr)
@@ -36,11 +34,8 @@ const EquationRow = (props: EquationRowProps) => {
     const handleInputOnBlur = (e) => {
         setTailStr('')
         setCompletions([])
-        // setAutocompleteVisible(false)
     }
     const handleInputOnFocus = (e) => {
-        // const tailStr = sliceFromLastSpace(e.target.value)
-        // setTailStr(tailStr)
         updateAutocompletePosition(e.target)
         updateCompletions(e.target.value)
     }
@@ -49,22 +44,13 @@ const EquationRow = (props: EquationRowProps) => {
         if (e.key === 'Tab') {
             e.preventDefault()
             if (completions.length > 0) {
-                console.log('Tab key pressed')
-                console.log(completions[0])
-                var base = sliceStringBeforeLastWord(
+                const base = sliceStringBeforeLastWord(
                     e.target.value
                 )
-                if (base !== '') {
-                    base += ' '
-                }
                 setter(base + completions[0].code)
                 setCompletions([])
             }
         }
-        // const tailStr = sliceFromLastSpace(e.target.value)
-        // setTailStr(tailStr)
-        // updateAutocompletePosition(e.target)
-        // updateCompletions(tailStr, environment)
     }
     const updateAutocompletePosition = (input) => {
         // Set the initial cursor position to the end of the input's current val
@@ -119,7 +105,6 @@ const EquationRow = (props: EquationRowProps) => {
         <div className="flex flex-row items- gap-4 w-full">
             {/* TODO: Get rid of the annoying focus outline! */}
             <Input className="min-w-12 max-w-[300px] font-mono" value={lhs}
-                // onChange={(e) => setLhs(e.target.value)}/>
                    onChange={(e) => handleInputChange(e, setLhs)}
                    onBlur={(e) => handleInputOnBlur(e)}
                    onFocus={(e) => handleInputOnFocus(e)}
@@ -127,21 +112,17 @@ const EquationRow = (props: EquationRowProps) => {
             />
             <span className="text-lg text-gray-500">=</span>
             <Input className="min-w-12 font-mono" value={rhs}
-                // onChange={(e) => setRhs(e.target.value)}/>
                    onChange={(e) => handleInputChange(e, setRhs)}
                    onBlur={(e) => handleInputOnBlur(e)}
                    onFocus={(e) => handleInputOnFocus(e)}
                    onKeyDown={(e) => handleKeyDown(e, setRhs)}
             />
-            {/*{autocompleteVisible &&*/}
             <Autocomplete
                 xPosition={autocompletePosition.x}
                 yPosition={autocompletePosition.y}
                 completions={completions}
                 // environment={environment}
             />
-
-            {/*}*/}
         </div>
     )
 }
