@@ -29,7 +29,7 @@ export function generateUUID() {
 
 }
 
-export function sliceFromLastSpace(str) {
+export function sliceFromLastSpace(str: string) {
     const lastSpaceIndex = str.lastIndexOf(' ');
     // If no space is found, return the original string
     if (lastSpaceIndex === -1) {
@@ -38,7 +38,7 @@ export function sliceFromLastSpace(str) {
     return str.slice(lastSpaceIndex + 1);
 }
 
-export function sliceStringBeforeLastWord(str, includeTrailingSpace = true) {
+export function sliceStringBeforeLastWord(str: string, includeTrailingSpace: boolean = true): string {
     const lastIndex = str.lastIndexOf(" ");
     const sliceEndIndex = includeTrailingSpace ? lastIndex + 1 : lastIndex
     // Handle cases with no spaces

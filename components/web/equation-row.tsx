@@ -1,6 +1,6 @@
 import {sliceFromLastSpace, sliceStringBeforeLastWord} from "@/lib/utils";
 import {Equation} from "@/lib/types/equation";
-import {EquationEnvironment} from "@/lib/types/identifiers";
+import {EquationEnvironment, Identifier} from "@/lib/types/identifiers";
 import {Input} from "../ui/input";
 import {useState, useEffect} from "react";
 import Autocomplete from "@/components/web/autocomplete";
@@ -19,42 +19,44 @@ const EquationRow = (props: EquationRowProps) => {
         x: 0,
         y: 0
     });
-    const [completions, setCompletions] = useState([])
+    const [completions, setCompletions] = useState<Identifier[]>([])
 
 
-    const handleInputChange = (e, setter) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, setter: (value: string) => void) => {
         const input = e.target;
         // Get the 'tail' (i.e. string from last whitespace to current
         // cursor location in the input) to use as seed for finding completions.
-        updateAutocompletePosition(input)
+        updateAutocompletePosition(e)
         updateCompletions(e.target.value)
         setTailStr(tailStr)
         setter(e.target.value)
     }
-    const handleInputOnBlur = (e) => {
+    const handleInputOnBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTailStr('')
         setCompletions([])
     }
-    const handleInputOnFocus = (e) => {
-        updateAutocompletePosition(e.target)
+    const handleInputOnFocus = (e: React.ChangeEvent<HTMLInputElement>) => {
+        updateAutocompletePosition(e)
         updateCompletions(e.target.value)
     }
 
-    const handleKeyDown = (e, setter) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, setter: (value: string) => void) => {
+        console.log('event')
+        console.log(e)
         if (e.key === 'Tab') {
             e.preventDefault()
             if (completions.length > 0) {
                 const base = sliceStringBeforeLastWord(
-                    e.target.value
+                    e.currentTarget.value
                 )
                 setter(base + completions[0].code)
                 setCompletions([])
             }
         }
     }
-    const updateAutocompletePosition = (input) => {
+    const updateAutocompletePosition = (e: React.ChangeEvent<HTMLInputElement>) => {
         // Set the initial cursor position to the end of the input's current val
-        const cursorPosition = input.value.length;
+        const cursorPosition = e.target.value.length;
 
         // Create a temporary span to measure the text up to the cursor.
         const tempSpan = document.createElement('span');
@@ -63,20 +65,26 @@ const EquationRow = (props: EquationRowProps) => {
         // Preserve spaces and line breaks
         tempSpan.style.whiteSpace = 'pre';
         // Match input font
-        tempSpan.style.font = window.getComputedStyle(input).font;
+        tempSpan.style.font = window.getComputedStyle(e.target).font;
 
         // Add text up to the cursor to the span.
-        tempSpan.textContent = input.value.substring(0, cursorPosition);
+        tempSpan.textContent = e.target.value.substring(0, cursorPosition);
 
         // Append span to the input's parent to get accurate dimensions.
-        input.parentElement.appendChild(tempSpan);
+        if (e.target.parentElement) {
+            // Access properties or methods of e.target.parentElement
+            e.target.parentElement.appendChild(tempSpan);
+        } else {
+            // Handle the case where e.target.parentElement is null
+            console.log("No parent element found.");
+        }
 
         const rect = tempSpan.getBoundingClientRect();
 
         // Adjust for input's position and scroll.
-        const inputRect = input.getBoundingClientRect();
-        const scrollLeft = input.scrollLeft;
-        const scrollTop = input.scrollTop;
+        const inputRect = e.target.getBoundingClientRect();
+        const scrollLeft = e.target.scrollLeft;
+        const scrollTop = e.target.scrollTop;
 
         setAutocompletePosition({
             x: rect.width + inputRect.left - scrollLeft,
@@ -84,10 +92,16 @@ const EquationRow = (props: EquationRowProps) => {
         });
 
         // Remove the temporary span.
-        input.parentElement.removeChild(tempSpan);
+        if (e.target.parentElement) {
+            // Access properties or methods of e.target.parentElement
+            e.target.parentElement.removeChild(tempSpan);
+        } else {
+            // Handle the case where e.target.parentElement is null
+            console.log("No parent element found.");
+        }
 
     }
-    const updateCompletions = (value) => {
+    const updateCompletions = (value: string) => {
         const tailStr = sliceFromLastSpace(value)
         if (tailStr.length === 0) {
             setCompletions([])
