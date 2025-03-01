@@ -1,6 +1,6 @@
 import {EquationEnvironment} from "@/lib/types/identifiers";
 import {useEffect, useState} from "react";
-import {Identifier} from "acorn";
+import {Identifier} from "@/lib/types/identifiers";
 
 interface AutocompleteProps {
     xPosition: number,
