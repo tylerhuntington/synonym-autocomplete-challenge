@@ -26,4 +26,21 @@ export function generateUUID() {
   }
   
   return uuid;
+
+}
+
+export function sliceFromLastSpace(str) {
+  const lastSpaceIndex = str.lastIndexOf(' ');
+  if (lastSpaceIndex === -1) {
+    return str; // If no space is found, return the original string
+  }
+  return str.slice(lastSpaceIndex + 1);
+}
+
+export function sliceStringBeforeLastWord(str) {
+  const lastIndex = str.lastIndexOf(" ");
+  if (lastIndex === -1) {
+    return ""; // Handle cases with no spaces
+  }
+  return str.slice(0, lastIndex);
 }

@@ -7,7 +7,7 @@ import EquationRow from "./equation-row";
 interface EditorPanelProps {
   equations: Equation[];
   addEquation: () => void;
-  environment: EquationEnvironment; 
+  environment: EquationEnvironment;
 }
 
 const EditorPanel = (props: EditorPanelProps) => {
@@ -23,7 +23,7 @@ const EditorPanel = (props: EditorPanelProps) => {
         </Button>
       </div>
       {equations.map((equation, index) => (
-        <EquationRow key={index} equation={equation} />
+        <EquationRow key={index} equation={equation} environment={environment}/>
       ))}
     </div>
   )
